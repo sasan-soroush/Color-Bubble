@@ -15,6 +15,16 @@ class GameScene: SKScene {
     
     var balls = ["ballBlue" , "ballGreen" , "ballRed" , "ballPurple" , "ballYellow" ]
     var motionManager : CMMotionManager?
+    var scoreLabel = SKLabelNode(fontNamed: "HelveticaNeue-Thin")
+    
+    var score = 0 {
+        didSet {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            let formattedScore = formatter.string(from: score as NSNumber) ?? "0"
+            scoreLabel.text = "SCORE : \(formattedScore)"
+        }
+    }
     
     override func didMove(to view: SKView) {
         
@@ -23,6 +33,13 @@ class GameScene: SKScene {
         background.alpha = 0.2
         background.zPosition = -1
         addChild(background)
+        
+        scoreLabel.fontSize = 35
+        scoreLabel.text = "SCORE : 0"
+        scoreLabel.position = CGPoint(x: 20, y: 20)
+        scoreLabel.horizontalAlignmentMode = .left
+        scoreLabel.zPosition = 100
+        addChild(scoreLabel)
         
         let ball = SKSpriteNode(imageNamed: "ballBlue")
         ball.setScale(0.7)
@@ -50,6 +67,9 @@ class GameScene: SKScene {
         
         motionManager = CMMotionManager()
         motionManager?.startAccelerometerUpdates()
+        
+        
+        
     }
     
     
