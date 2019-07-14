@@ -123,8 +123,33 @@ class GameScene: SKScene {
         getMatches(from: tappedBall)
         
         if matchedBalls.count >= 3 {
-            score += Int(pow(2, Double(2)))
-            matchedBalls.forEach {$0.removeFromParent()}
+            score += Int(matchedBalls.count * 100)
+            matchedBalls.forEach {
+                if let particles = SKEmitterNode(fileNamed: "Explosion") {
+                    particles.position = $0.position
+                    addChild(particles)
+                    
+                    let removeAfterDead = SKAction.sequence([SKAction.wait(forDuration: 3) , SKAction.removeFromParent()])
+                    particles.run(removeAfterDead)
+                }
+                $0.removeFromParent()
+            }
         }
+        
+        if matchedBalls.count > 10 {
+            
+            let omg = SKSpriteNode(imageNamed: "omg")
+            omg.zPosition = 100
+            omg.position = CGPoint(x: frame.midX, y: frame.midY)
+            omg.xScale = 0.001
+            omg.yScale = 0.001
+            addChild(omg)
+            
+            let appear = SKAction.group([SKAction.scale(to: 0.5, duration: 0.25) , SKAction.fadeIn(withDuration: 0.25)])
+            let disappear = SKAction.group([SKAction.scale(to: 1, duration: 0.25),SKAction.fadeOut(withDuration: 0.25)])
+            let sequence = SKAction.sequence([appear , SKAction.wait(forDuration: 0.25) , disappear])
+            omg.run(sequence)
+        }
+        
      }
 }
