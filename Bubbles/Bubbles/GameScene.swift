@@ -64,6 +64,18 @@ class GameScene: SKScene {
             }
         }
         
+        let uniforms: [SKUniform] = [
+            SKUniform(name: "u_speed", float: 0.5),
+            SKUniform(name: "u_strength", float: 3),
+            SKUniform(name: "u_frequency", float: 15)
+        ]
+        
+        let shader = SKShader(fileNamed: "background")
+        shader.uniforms = uniforms
+        background.shader = shader
+        
+        background.run(SKAction.repeatForever(SKAction.rotate(byAngle: .pi, duration: 30)))
+        
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame.inset(by: UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)))
         
         motionManager = CMMotionManager()
@@ -74,6 +86,10 @@ class GameScene: SKScene {
     override func update(_ currentTime: TimeInterval) {
         if let data = motionManager?.accelerometerData {
             physicsWorld.gravity = CGVector(dx: data.acceleration.y * -50, dy: data.acceleration.x * 50)
+        }
+        
+        if score > 0 {
+            score -= 1
         }
     }
     
@@ -136,8 +152,7 @@ class GameScene: SKScene {
             }
         }
         
-        if matchedBalls.count > 10 {
-            
+        if matchedBalls.count > 8 {
             let omg = SKSpriteNode(imageNamed: "omg")
             omg.zPosition = 100
             omg.position = CGPoint(x: frame.midX, y: frame.midY)
@@ -146,8 +161,8 @@ class GameScene: SKScene {
             addChild(omg)
             
             let appear = SKAction.group([SKAction.scale(to: 0.5, duration: 0.25) , SKAction.fadeIn(withDuration: 0.25)])
-            let disappear = SKAction.group([SKAction.scale(to: 1, duration: 0.25),SKAction.fadeOut(withDuration: 0.25)])
-            let sequence = SKAction.sequence([appear , SKAction.wait(forDuration: 0.25) , disappear])
+            let disappear = SKAction.group([SKAction.scale(to: 2, duration: 0.25),SKAction.fadeOut(withDuration: 0.25)])
+            let sequence = SKAction.sequence([appear , SKAction.wait(forDuration: 0.25) , disappear , SKAction.removeFromParent()])
             omg.run(sequence)
         }
         
