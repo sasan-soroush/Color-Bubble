@@ -8,8 +8,44 @@
 
 import SpriteKit
 import CoreMotion
+import UIKit
 
 class Ball : SKSpriteNode {}
+
+extension GameScene {
+    
+    func setupView() {
+        
+        let background = SKSpriteNode(imageNamed: "checkerboard")
+        background.position = CGPoint(x: frame.midX, y: frame.midY)
+        background.alpha = 0.2
+        background.zPosition = -2
+        addChild(background)
+        let uniforms: [SKUniform] = [
+            SKUniform(name: "u_speed", float: 0.5),
+            SKUniform(name: "u_strength", float: 3),
+            SKUniform(name: "u_frequency", float: 15)
+        ]
+        
+        let shader = SKShader(fileNamed: "background")
+        shader.uniforms = uniforms
+        background.shader = shader
+        
+        background.run(SKAction.repeatForever(SKAction.rotate(byAngle: .pi, duration: 30)))
+        
+        scoreLabel.fontSize = 35
+        scoreLabel.text = "SCORE : 0"
+        scoreLabel.position = CGPoint(x: 10, y: 10)
+        scoreLabel.horizontalAlignmentMode = .left
+        scoreLabel.zPosition = 100
+        addChild(scoreLabel)
+        
+        
+        
+    }
+    
+    
+}
 
 class GameScene: SKScene {
     
@@ -17,6 +53,9 @@ class GameScene: SKScene {
     var motionManager : CMMotionManager?
     var scoreLabel = SKLabelNode(fontNamed: "HelveticaNeue-Thin")
     var matchedBalls = Set<Ball>()
+    var gotInitialValueForDevicePosition : Bool = false
+    var initialX : Double = 0
+    var initialY : Double = 0
     
     var score = 0 {
         didSet {
@@ -29,18 +68,13 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         
-        let background = SKSpriteNode(imageNamed: "checkerboard")
-        background.position = CGPoint(x: frame.midX, y: frame.midY)
-        background.alpha = 0.2
-        background.zPosition = -1
-        addChild(background)
+        setupView()
         
-        scoreLabel.fontSize = 35
-        scoreLabel.text = "SCORE : 0"
-        scoreLabel.position = CGPoint(x: 10, y: 10)
-        scoreLabel.horizontalAlignmentMode = .left
-        scoreLabel.zPosition = 100
-        addChild(scoreLabel)
+        let recalibrateButton = ButtonNode(defaultImageName: "ballBlue", activeButtonImage: "ballGreen")
+        recalibrateButton.position = CGPoint(x: view.frame.maxX - 50, y: view.frame.height/12)
+        recalibrateButton.zPosition = 100
+        addChild(recalibrateButton)
+        recalibrateButton.action = reCalibrate
         
         let ball = SKSpriteNode(imageNamed: "ballBlue")
         ball.setScale(0.7)
@@ -64,28 +98,17 @@ class GameScene: SKScene {
             }
         }
         
-        let uniforms: [SKUniform] = [
-            SKUniform(name: "u_speed", float: 0.5),
-            SKUniform(name: "u_strength", float: 3),
-            SKUniform(name: "u_frequency", float: 15)
-        ]
-        
-        let shader = SKShader(fileNamed: "background")
-        shader.uniforms = uniforms
-        background.shader = shader
-        
-        background.run(SKAction.repeatForever(SKAction.rotate(byAngle: .pi, duration: 30)))
-        
-        physicsBody = SKPhysicsBody(edgeLoopFrom: frame.inset(by: UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)))
-        
+        let inset = view.frame.height/6
+        physicsBody = SKPhysicsBody(edgeLoopFrom: frame.inset(by: UIEdgeInsets(top: inset, left: 0, bottom: 0, right: 0)))
+      
         motionManager = CMMotionManager()
         motionManager?.startAccelerometerUpdates()
-        
     }
-    
+   
     override func update(_ currentTime: TimeInterval) {
+        
         if let data = motionManager?.accelerometerData {
-            physicsWorld.gravity = CGVector(dx: data.acceleration.y * -50, dy: data.acceleration.x * 50)
+            physicsWorld.gravity = CGVector(dx: data.acceleration.x * 50 - initialX , dy: (data.acceleration.y) * 50 - initialY)
         }
         
         if score > 0 {
@@ -93,17 +116,12 @@ class GameScene: SKScene {
         }
     }
     
-//    func getMatches(from node : Ball) {
-//        for body in node.physicsBody!.allContactedBodies() {
-//            guard let ball = body.node as? Ball else {continue}
-//            guard ball.name == node.name else {continue}
-//
-//            if !matchedBalls.contains(ball) {
-//                matchedBalls.insert(ball)
-//                getMatches(from: ball)
-//            }
-//        }
-//    }
+    func reCalibrate() {
+        if let data = motionManager?.accelerometerData {
+            initialX = data.acceleration.x * 50
+            initialY = data.acceleration.y * 50 + 20
+        }
+    }
     
     func getMatches(from startBall : Ball) {
         let matchWidth = startBall.frame.width * startBall.frame.width * 1.1
@@ -167,4 +185,7 @@ class GameScene: SKScene {
         }
         
      }
+    
+    
+    
 }

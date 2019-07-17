@@ -17,6 +17,7 @@
 		B2AA089522DA211800681BC7 /* BubblesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2AA089422DA211800681BC7 /* BubblesTests.swift */; };
 		B2AA08A022DB268200681BC7 /* Explosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = B2AA089F22DB268100681BC7 /* Explosion.sks */; };
 		B2AA08A222DB38A500681BC7 /* background.fsh in Resources */ = {isa = PBXBuildFile; fileRef = B2AA08A122DB38A500681BC7 /* background.fsh */; };
+		B2AA08C722DF866B00681BC7 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2AA08C622DF866B00681BC7 /* Button.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		B2AA089622DA211800681BC7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B2AA089F22DB268100681BC7 /* Explosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Explosion.sks; sourceTree = "<group>"; };
 		B2AA08A122DB38A500681BC7 /* background.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = background.fsh; sourceTree = "<group>"; };
+		B2AA08C622DF866B00681BC7 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 				B2AA087B22DA211500681BC7 /* GameScene.sks */,
 				B2AA087F22DA211500681BC7 /* GameScene.swift */,
 				B2AA088122DA211500681BC7 /* GameViewController.swift */,
+				B2AA08C622DF866B00681BC7 /* Button.swift */,
 				B2AA088322DA211500681BC7 /* Main.storyboard */,
 				B2AA088622DA211700681BC7 /* Assets.xcassets */,
 				B2AA088822DA211700681BC7 /* LaunchScreen.storyboard */,
@@ -215,6 +218,7 @@
 				B2AA088022DA211500681BC7 /* GameScene.swift in Sources */,
 				B2AA088222DA211500681BC7 /* GameViewController.swift in Sources */,
 				B2AA087A22DA211500681BC7 /* AppDelegate.swift in Sources */,
+				B2AA08C722DF866B00681BC7 /* Button.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -386,7 +390,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.friedapp.Bubbles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -404,7 +408,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.friedapp.Bubbles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
