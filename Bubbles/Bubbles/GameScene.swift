@@ -118,8 +118,16 @@ class GameScene: SKScene {
     
     func reCalibrate() {
         if let data = motionManager?.accelerometerData {
+            
+            let x = data.acceleration.y * 50
             initialX = data.acceleration.x * 50
-            initialY = data.acceleration.y * 50 + 20
+            initialY = data.acceleration.y * 50
+            
+            if x * x > 25 {
+                initialY += 10
+            } else {
+                initialY = 0
+            }
         }
     }
     
