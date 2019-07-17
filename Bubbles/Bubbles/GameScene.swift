@@ -18,9 +18,10 @@ extension GameScene {
         
         let background = SKSpriteNode(imageNamed: "checkerboard")
         background.position = CGPoint(x: frame.midX, y: frame.midY)
-        background.alpha = 0.2
+        background.alpha = 0.5
         background.zPosition = -2
         addChild(background)
+        
         let uniforms: [SKUniform] = [
             SKUniform(name: "u_speed", float: 0.5),
             SKUniform(name: "u_strength", float: 3),
@@ -31,7 +32,7 @@ extension GameScene {
         shader.uniforms = uniforms
         background.shader = shader
         
-        background.run(SKAction.repeatForever(SKAction.rotate(byAngle: .pi, duration: 30)))
+        //background.run(SKAction.repeatForever(SKAction.rotate(byAngle: .pi, duration: 30)))
         
         scoreLabel.fontSize = 35
         scoreLabel.text = "SCORE : 0"
@@ -44,6 +45,22 @@ extension GameScene {
         
     }
     
+    private func throwBall() {
+        let ball_ = SKSpriteNode(imageNamed: "ballBlue")
+        ball_.setScale(0.7)
+        let ballRadius = ball_.frame.width/2
+        let ballType = balls.randomElement()!
+        let ball = Ball(imageNamed: ballType)
+        //let ball = Ball(imageNamed: ballType)
+        ball.position = CGPoint(x: view?.frame.midX ?? 0, y: view?.frame.maxY ?? 0)
+        ball.name = ballType
+        ball.setScale(0.7)
+        ball.physicsBody = SKPhysicsBody(circleOfRadius: ballRadius)
+        ball.physicsBody?.allowsRotation = false
+        ball.physicsBody?.restitution = 0
+        ball.physicsBody?.friction = 0
+        addChild(ball)
+    }
     
 }
 
@@ -70,9 +87,10 @@ class GameScene: SKScene {
         
         setupView()
         
-        let recalibrateButton = ButtonNode(defaultImageName: "ballBlue", activeButtonImage: "ballGreen")
+        let recalibrateButton = ButtonNode(defaultImageName: "calibration", activeButtonImage: "calibration")
         recalibrateButton.position = CGPoint(x: view.frame.maxX - 50, y: view.frame.height/12)
         recalibrateButton.zPosition = 100
+        recalibrateButton.setScale(0.4)
         addChild(recalibrateButton)
         recalibrateButton.action = reCalibrate
         
@@ -117,8 +135,8 @@ class GameScene: SKScene {
     }
     
     func reCalibrate() {
+        
         if let data = motionManager?.accelerometerData {
-            
             let x = data.acceleration.y * 50
             initialX = data.acceleration.x * 50
             initialY = data.acceleration.y * 50
@@ -129,6 +147,9 @@ class GameScene: SKScene {
                 initialY = 0
             }
         }
+        
+        throwBall()
+        
     }
     
     func getMatches(from startBall : Ball) {
